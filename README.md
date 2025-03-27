@@ -73,76 +73,63 @@ http://localhost:3000/rpc
 
 This will automatically authenticate and forward requests to the RPC API.
 
-## Code Breakdown
+# Running HTML with Live Server
 
-### Authentication Service (`src/services/authService.js`)
+This guide will walk you through how to run the `addNftMetamask.html` file located in the `middleware-sample/test` directory using the Live Server extension in Visual Studio Code (VS Code).
 
-Handles authentication and retrieves the JWT token:
+## Prerequisites
 
-```javascript
-const axios = require("axios");
+Before you begin, ensure you have the following:
 
-async function getJwtToken() {
-  try {
-    const response = await axios.post("http://auth.naas.lacnet.com/login", {
-      username: process.env.AUTH_USER,
-      password: process.env.AUTH_PASS,
-    });
-    return response.data.token;
-  } catch (error) {
-    console.error(
-      "Authentication failed:",
-      error.response?.data || error.message
-    );
-    return null;
-  }
-}
+1. **Visual Studio Code**: If you don’t have it, you can download it from [here](https://code.visualstudio.com/).
+2. **Live Server Extension**: You need to install the Live Server extension in Visual Studio Code. To do so:
+   - Open Visual Studio Code.
+   - Go to the Extensions view by clicking the Extensions icon in the Activity Bar on the side of the window.
+   - Search for "Live Server" and click the **Install** button for the first result by **Ritwick Dey**.
 
-module.exports = { getJwtToken };
-```
+## Steps to Run `addNftMetamask.html`
 
-### Proxy Middleware (`src/middleware/proxyMiddleware.js`)
+### 1. Open the Project in VS Code
 
-Intercepts RPC requests and attaches the JWT token:
+- Open Visual Studio Code.
+- Click on **File** > **Open Folder** and select the `middleware-sample` project folder.
 
-```javascript
-const { createProxyMiddleware } = require("http-proxy-middleware");
-const { getJwtToken } = require("../services/authService");
+### 2. Navigate to the HTML File
 
-async function proxyMiddleware(req, res, next) {
-  const jwtToken = await getJwtToken();
-  if (!jwtToken) {
-    return res.status(401).json({ error: "Authentication failed" });
-  }
+- Inside Visual Studio Code, open the folder structure in the **Explorer** on the left.
+- Navigate to the following path: middleware-sample/test/addNftMetamask.html
 
-  createProxyMiddleware({
-    target: "http://naas.lacnet.com/rpc",
-    changeOrigin: true,
-    pathRewrite: { "^/rpc": "" },
-    onProxyReq: (proxyReq) => {
-      proxyReq.setHeader("Authorization", `Bearer ${jwtToken}`);
-    },
-  })(req, res, next);
-}
+### 3. Open the HTML File
 
-module.exports = proxyMiddleware;
-```
+- Click on `addNftMetamask.html` to open it in the editor.
 
-### Main Server (`src/index.js`)
+### 4. Update the `nftMetadata` Object
 
-Initializes Express and applies the middleware:
+Before running the file, make sure to modify the `nftMetadata` object with the correct details of the NFT you own. Update the `address`, `tokenId`, and any other details like `name`, `symbol`, and `image`.
+
+Here's the `nftMetadata` object you'll find in the file:
 
 ```javascript
-require("./config/dotenv"); // Load environment variables
-const express = require("express");
-const proxyMiddleware = require("./middleware/proxyMiddleware");
-
-const app = express();
-
-app.use("/rpc", proxyMiddleware);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-  console.log(`Proxy running on http://localhost:${PORT}/rpc`)
-);
+const nftMetadata = {
+  type: "ERC721",
+  options: {
+    address: "0x77edf9416A01608ccb688fBDc26Fa72FA4712A94", // Replace with your NFT contract address
+    tokenId: "0", // Replace with your token ID
+    symbol: "LACNFT", // Symbol of the token
+    image: "", // Image URL
+    name: "My Custom NFT", // Name of the NFT
+  },
+};
 ```
+
+### 5. Start Live Server
+
+Right-click anywhere inside the addNftMetamask.html file.
+
+Select "Open with Live Server" from the context menu.
+
+Alternatively, you can:
+
+Click the Go Live button located at the bottom right of the VS Code window (this button will appear after installing the Live Server extension).
+
+This will automatically open the HTML file in your default web browser, and Live Server will start a local development server.
