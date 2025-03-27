@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MetaMask NFT Example</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .container {
+        text-align: center;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #f0a500;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+      button:hover {
+        background-color: #f76c0f;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>MetaMask NFT Example</h1>
+      <p>Click the button below to add an NFT to your MetaMask wallet.</p>
+      <button id="addNFTButton">Add NFT to MetaMask</button>
+    </div>
+
+    <script>
+      document
+        .getElementById("addNFTButton")
+        .addEventListener("click", async function () {
+          if (!window.ethereum) {
+            alert("MetaMask is not installed!");
+            return;
+          }
+
+          const nftMetadata = {
+            type: "ERC721",
+            options: {
+              address: "0x77edf9416A01608ccb688fBDc26Fa72FA4712A94", // Replace with your NFT contract address
+              tokenId: "0", // Replace with your token ID
+              symbol: "LACNFT", // Symbol of the token
+              image: "", // Image URL
+              name: "My Custom NFT", // Name of the NFT
+            },
+          };
+
+          try {
+            // Request MetaMask to add the NFT to the wallet
+            const result = await window.ethereum.request({
+              method: "wallet_watchAsset",
+              params: nftMetadata,
+            });
+
+            if (result) {
+              alert("NFT added successfully!");
+            } else {
+              alert("Failed to add NFT to MetaMask.");
+            }
+          } catch (error) {
+            console.error("Error adding NFT:", error);
+            alert("An error occurred while adding the NFT.");
+          }
+        });
+    </script>
+  </body>
+</html>
