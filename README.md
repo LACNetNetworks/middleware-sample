@@ -16,12 +16,10 @@ This middleware is built using **Node.js**, **Express**, and **http-proxy-middle
 ```plaintext
 metamask-middleware/
 │── src/
-│   ├── middleware/
-│   │   ├── proxyMiddleware.js  # Middleware to proxy RPC requests with JWT auth
+│   │
 │   ├── services/
 │   │   ├── authService.js      # Function to authenticate and get JWT token
-│   ├── config/
-│   │   ├── dotenv.js           # Loads environment variables
+│   │   ├── proxyService.js     # Middleware to proxy RPC requests with JWT auth
 │   ├── index.js                # Main entry point (Express server)
 │── .env                        # Environment variables
 │── package.json                # Dependencies and scripts
@@ -37,7 +35,7 @@ git clone https://github.com/your-repo/metamask-middleware.git
 cd metamask-middleware
 ```
 
-### 2️⃣ Install Dependencies
+### 2️⃣ Use NodeJS >= 18 and install Dependencies
 
 ```sh
 npm install

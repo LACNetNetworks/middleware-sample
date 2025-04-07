@@ -12,17 +12,28 @@ async function getJwtToken() {
   }
 
   try {
-    const data = qs.stringify({
-      username: process.env.AUTH_USER,
-      password: process.env.AUTH_PASS,
-    });
+    const isMainnet = process.env.NETWORK === "mainnet";
+
+    const data = isMainnet
+      ? qs.stringify({
+          username: process.env.AUTH_USER,
+          password: process.env.AUTH_PASS,
+        })
+      : {
+          username: process.env.AUTH_USER,
+          password: process.env.AUTH_PASS,
+        };
+
+    const headers = isMainnet
+      ? { "Content-Type": "application/x-www-form-urlencoded" }
+      : { "Content-Type": "application/json" };
 
     const response = await axios.post(process.env.AUTH_SERVICE, data, {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers,
     });
 
     cachedToken = response.data.access_token;
-    tokenExpiration = currentTime + (response.data.expires_in || 3600); // Default to 1 hour if `expires_in` is missing
+    tokenExpiration = currentTime + (response.data.expires_in || 3600);
 
     return cachedToken;
   } catch (error) {

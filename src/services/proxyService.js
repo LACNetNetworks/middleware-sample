@@ -5,9 +5,6 @@ const proxyRequest = async (req, res) => {
   try {
     console.log("Forwarding request to RPC...");
 
-    // Log the request body to see if it's populated
-    console.log("Request body:", req.body);
-
     // Prepare request headers
     const headers = {
       Accept: "application/json",
