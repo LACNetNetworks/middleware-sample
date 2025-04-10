@@ -26,7 +26,7 @@ async function getJwtToken() {
 
     const headers = isMainnet
       ? { "Content-Type": "application/x-www-form-urlencoded" }
-      : { "Content-Type": "application/json" };
+      : { "Content-Type": "application/x-www-form-urlencoded" };
 
     const response = await axios.post(process.env.AUTH_SERVICE, data, {
       headers,
