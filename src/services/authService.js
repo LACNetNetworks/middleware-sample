@@ -12,21 +12,12 @@ async function getJwtToken() {
   }
 
   try {
-    const isMainnet = process.env.NETWORK === "mainnet";
+    const data = qs.stringify({
+      username: process.env.AUTH_USER,
+      password: process.env.AUTH_PASS,
+    });
 
-    const data = isMainnet
-      ? qs.stringify({
-          username: process.env.AUTH_USER,
-          password: process.env.AUTH_PASS,
-        })
-      : {
-          username: process.env.AUTH_USER,
-          password: process.env.AUTH_PASS,
-        };
-
-    const headers = isMainnet
-      ? { "Content-Type": "application/x-www-form-urlencoded" }
-      : { "Content-Type": "application/x-www-form-urlencoded" };
+    const headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
     const response = await axios.post(process.env.AUTH_SERVICE, data, {
       headers,
